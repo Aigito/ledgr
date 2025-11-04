@@ -18,6 +18,10 @@ userRouter.post("/signup", async (req, res) => {
     });
 
     const savedUser = await user.save();
+    const cookie = await savedUser.signJWT();
+
+    res.cookie("token", cookie, { expires: new Date(Date.now() + (60 * 24 * 7 * 60000)) });
+
     res.json({
       message: "User successfully created",
       data: savedUser
@@ -35,6 +39,9 @@ userRouter.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
+      const cookie = await savedUser.signJWT();
+      res.cookie("token", cookie, { expires: new Date(Date.now() + (60 * 24 * 7 * 60000)) });
+
       res.send("Successfully logged in");
     } else {
       throw new Error("Invalid login credentials");
