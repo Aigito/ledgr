@@ -1,8 +1,9 @@
 import express from "express";
+import userAuth from "../middlewares/userAuth.js";
 
 const accountRouter = express.Router();
 
-accountRouter.get("/", (req, res) => {
+accountRouter.get("/", userAuth, (req, res) => {
   res.send("TO DO: Retrieve all accounts");
 });
 

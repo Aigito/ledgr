@@ -39,7 +39,7 @@ userRouter.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
-      const cookie = await savedUser.signJWT();
+      const cookie = await user.signJWT();
       res.cookie("token", cookie, { expires: new Date(Date.now() + (60 * 24 * 7 * 60000)) });
 
       res.send("Successfully logged in");
