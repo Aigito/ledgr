@@ -24,8 +24,24 @@ userRouter.post("/signup", async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    console.log(`Unable to create new user ${name, email}`)
+    console.log(`Unable to create new user ${name, email}`);
   };
+});
+
+userRouter.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (passwordMatch) {
+      res.send("Successfully logged in");
+    } else {
+      throw new Error("Invalid login credentials");
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 export default userRouter;
