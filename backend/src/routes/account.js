@@ -12,7 +12,7 @@ accountRouter.get("/", userAuth, async (req, res) => {
   try {
     const account = await Account.findOne(filter);
 
-    if (!account) res.status(404).send("Account does not exist!");
+    if (!account) res.status(404).send(`Account '${accountName}' does not exist!`);
 
     res.json(account);
   } catch (err) {
@@ -34,13 +34,13 @@ accountRouter.post("/", userAuth, async (req, res) => {
 
     const savedAccount = await account.save();
 
-    res.json({
-      message: "Account created successfully",
+    res.send({
+      message: `Account '${savedAccount}' created successfully`,
       data: savedAccount
     });
   } catch (err) {
     console.error(err.message);
-    console.log(`Unable to create account ${accountName}`);
+    console.log(`Unable to create account '${accountName}'`);
   };
 });
 
@@ -57,7 +57,7 @@ accountRouter.patch("/", userAuth, async (req, res) => {
     );
 
     if (!updatedAccount) {
-      res.status(404).send(`Account ${oldAccountName} does not exist!`);
+      res.status(404).send(`Account '${oldAccountName}' does not exist!`);
     } else {
       res.send({
         message: "Account successfully updated",
@@ -69,8 +69,21 @@ accountRouter.patch("/", userAuth, async (req, res) => {
   };
 });
 
-accountRouter.delete("/", (req, res) => {
-  res.send("TO DO: Delete an existing account");
+accountRouter.delete("/", userAuth, async (req, res) => {
+  const { accountName } = req.body;
+  const user = req.user;
+  const filter = { userId: user.id, accountName };
+
+  const deletedAccount = await Account.findOneAndDelete(filter);
+
+  if (!deletedAccount) {
+    res.status(404).send(`Account '${accountName}' does not exist!`);
+  } else {
+    res.send({
+      message: `Account '${accountName}' successfully deleted`,
+      data: deletedAccount
+    });
+  }
 });
 
 export default accountRouter;
