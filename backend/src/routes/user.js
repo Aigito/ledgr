@@ -27,8 +27,12 @@ userRouter.post("/signup", async (req, res) => {
       data: savedUser
     });
   } catch (err) {
-    console.error(err.message);
-    console.log(`Unable to create new user ${name, email}`);
+    if (err.code === 11000) {
+      res.status(409).send(`Email '${email}' has already been taken`);
+    } else {
+      console.error(err.message);
+      console.log(`Unable to create new user ${name, email}`);
+    };
   };
 });
 
