@@ -10,6 +10,7 @@ const accountSchema = mongoose.Schema(
     accountName: {
       type: String,
       required: [true, "Please provide an account name"],
+      unique: true,
       validate: {
         validator: function (value) {
           return /^[\w ]+$/.test(value);

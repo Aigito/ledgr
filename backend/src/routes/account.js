@@ -20,6 +20,8 @@ accountRouter.get("/", userAuth, async (req, res) => {
   }
 });
 
+// TODO: Post res.send message has escape keys
+
 accountRouter.post("/", userAuth, async (req, res) => {
   const { accountName, defaultType, category } = req.body;
   const user = req.user;
@@ -39,8 +41,12 @@ accountRouter.post("/", userAuth, async (req, res) => {
       data: savedAccount
     });
   } catch (err) {
-    console.error(err.message);
-    console.log(`Unable to create account '${accountName}'`);
+    if (err.code === 11000) {
+      res.status(409).send(`Account '${accountName}' already exists`);
+    } else {
+      console.error(err.message);
+      console.log(`Unable to create account '${accountName}'`);
+    }
   };
 });
 
