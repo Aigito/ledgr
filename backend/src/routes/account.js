@@ -4,8 +4,20 @@ import Account from "../models/account.js"
 
 const accountRouter = express.Router();
 
-accountRouter.get("/", userAuth, (req, res) => {
+accountRouter.get("/", userAuth, async (req, res) => {
+  const { accountName } = req.body;
+  const user = req.user;
 
+  try {
+    const account = await Account.findOne({
+      userId: user._id,
+      accountName
+    });
+
+    res.json(account);
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 accountRouter.post("/", userAuth, async (req, res) => {
