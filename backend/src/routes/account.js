@@ -7,12 +7,12 @@ const accountRouter = express.Router();
 accountRouter.get("/", userAuth, async (req, res) => {
   const { accountName } = req.body;
   const user = req.user;
+  const filter = { userId: user.id, accountName };
 
   try {
-    const account = await Account.findOne({
-      userId: user._id,
-      accountName
-    });
+    const account = await Account.findOne(filter);
+
+    if (!account) res.status(404).send("Account does not exist!");
 
     res.json(account);
   } catch (err) {
@@ -44,8 +44,29 @@ accountRouter.post("/", userAuth, async (req, res) => {
   };
 });
 
-accountRouter.patch("/", (req, res) => {
-  res.send("TO DO: Update an existing account");
+accountRouter.patch("/", userAuth, async (req, res) => {
+  const { oldAccountName, newAccountName } = req.body;
+  const user = req.user;
+  const filter = { userId: user.id, accountName: oldAccountName };
+
+  try {
+    const updatedAccount = await Account.findOneAndUpdate(
+      filter,
+      { accountName: newAccountName },
+      { returnDocument: "after" }
+    );
+
+    if (!updatedAccount) {
+      res.status(404).send(`Account ${oldAccountName} does not exist!`);
+    } else {
+      res.send({
+        message: "Account successfully updated",
+        data: updatedAccount
+      });
+    };
+  } catch (err) {
+    console.error(err.message);
+  };
 });
 
 accountRouter.delete("/", (req, res) => {
