@@ -37,7 +37,7 @@ accountRouter.post("/", userAuth, async (req, res) => {
     const savedAccount = await account.save();
 
     res.send({
-      message: `Account '${savedAccount}' created successfully`,
+      message: `Account '${accountName}' created successfully`,
       data: savedAccount
     });
   } catch (err) {
