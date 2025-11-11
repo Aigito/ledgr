@@ -3,12 +3,14 @@ import cookieParser from "cookie-parser";
 import accountRouter from "./routes/account.js";
 import connectDB from "./config/database.js";
 import userRouter from "./routes/user.js";
+import transactionRouter from "./routes/transaction.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/account", accountRouter);
+app.use("/transaction", transactionRouter);
 app.use("/user", userRouter);
 
 connectDB()
