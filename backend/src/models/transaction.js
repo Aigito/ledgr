@@ -29,6 +29,10 @@ const transactionSchema = mongoose.Schema(
               message: "`{VALUE}` is not a valid type, please choose debit or credit"
             },
             required: [true, "Please provide a type: debit or credit"]
+          },
+          amount: {
+            type: Number,
+            required: [true, "Please enter amount"]
           }
         }
       ],
