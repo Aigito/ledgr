@@ -20,8 +20,6 @@ accountRouter.get("/", userAuth, async (req, res) => {
   }
 });
 
-// TODO: Post res.send message has escape keys
-
 accountRouter.post("/", userAuth, async (req, res) => {
   const { accountName, defaultType, category } = req.body;
   const user = req.user;
