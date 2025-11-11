@@ -34,6 +34,9 @@ const accountSchema = mongoose.Schema(
       },
       required: [true, "Please select a valid category"]
     }
+  },
+  {
+    timestamps: true
   }
 );
 
