@@ -31,7 +31,7 @@ transactionRouter.get("/", userAuth, async (req, res) => {
   const { transactionId } = req.body;
 
   try {
-    const transaction = await Transaction.findById(transactionId);
+    const transaction = await Transaction.findById(transactionId).populate("entries.accountId", "accountName");
 
     res.send(transaction);
   } catch (err) {
