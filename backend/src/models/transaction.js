@@ -47,6 +47,22 @@ const transactionSchema = mongoose.Schema(
   }
 );
 
+transactionSchema.pre('save', function (next) {
+  const totalDebit = this.entries
+    .filter(e => e.type === 'debit')
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  const totalCredit = this.entries
+    .filter(e => e.type === 'credit')
+    .reduce((sum, e) => sum + e.amount, 0);
+
+  if (totalDebit !== totalCredit) {
+    return next(new Error('Total debit must equal total credit.'));
+  }
+
+  next();
+});
+
 const Transaction = mongoose.model("Trasaction", transactionSchema);
 
 export default Transaction;
