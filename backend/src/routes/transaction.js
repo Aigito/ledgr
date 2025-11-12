@@ -27,4 +27,16 @@ transactionRouter.post("/", userAuth, async (req, res) => {
   }
 });
 
+transactionRouter.get("/", userAuth, async (req, res) => {
+  const { transactionId } = req.body;
+
+  try {
+    const transaction = await Transaction.findById(transactionId);
+
+    res.send(transaction);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
 export default transactionRouter;
