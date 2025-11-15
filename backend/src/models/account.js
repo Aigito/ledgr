@@ -29,7 +29,7 @@ const accountSchema = mongoose.Schema(
     category: {
       type: String,
       enum: {
-        values: ["income", "expense"],
+        values: ["income", "expense", "asset", "liability", "equity"],
         message: "`{VALUE} is not a valid category"
       },
       required: [true, "Please select a valid category"]
