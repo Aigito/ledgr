@@ -8,7 +8,15 @@ transactionRouter.get("/", userAuth, async (req, res) => {
   const { transactionId } = req.body;
 
   try {
-    const transaction = await Transaction.findById(transactionId).populate("entries.accountId", "accountName");
+    let transaction;
+
+    if (transactionId) {
+      transaction = await Transaction
+        .findById(transactionId)
+        .populate("entries.accountId", "accountName");
+    } else {
+      transaction = await Transaction.find();
+    }
 
     res.send(transaction);
   } catch (err) {
