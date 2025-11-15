@@ -16,7 +16,7 @@ accountRouter.get("/", userAuth, async (req, res) => {
 
     res.json(account);
   } catch (err) {
-    console.error(err.message);
+    res.status(400).send(err.message);
   }
 });
 
@@ -42,8 +42,10 @@ accountRouter.post("/", userAuth, async (req, res) => {
     if (err.code === 11000) {
       res.status(409).send(`Account '${accountName}' already exists`);
     } else {
-      console.error(err.message);
-      console.log(`Unable to create account '${accountName}'`);
+      res.status(400).send({
+        message: `Unable to create account '${accountName}'`,
+        error: err.message
+      })
     }
   };
 });
@@ -69,7 +71,7 @@ accountRouter.patch("/", userAuth, async (req, res) => {
       });
     };
   } catch (err) {
-    console.error(err.message);
+    res.status(400).send(err.message);
   };
 });
 

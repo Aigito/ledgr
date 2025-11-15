@@ -4,6 +4,18 @@ import Transaction from "../models/transaction.js";
 
 const transactionRouter = express.Router();
 
+transactionRouter.get("/", userAuth, async (req, res) => {
+  const { transactionId } = req.body;
+
+  try {
+    const transaction = await Transaction.findById(transactionId).populate("entries.accountId", "accountName");
+
+    res.send(transaction);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
 transactionRouter.post("/", userAuth, async (req, res) => {
   const user = req.user;
 
@@ -24,18 +36,6 @@ transactionRouter.post("/", userAuth, async (req, res) => {
     });
   } catch (err) {
     res.status(400).send(err.message)
-  }
-});
-
-transactionRouter.get("/", userAuth, async (req, res) => {
-  const { transactionId } = req.body;
-
-  try {
-    const transaction = await Transaction.findById(transactionId).populate("entries.accountId", "accountName");
-
-    res.send(transaction);
-  } catch (err) {
-    res.status(400).send(err.message);
   }
 });
 

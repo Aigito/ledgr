@@ -30,8 +30,10 @@ userRouter.post("/signup", async (req, res) => {
     if (err.code === 11000) {
       res.status(409).send(`Email '${email}' has already been taken`);
     } else {
-      console.error(err.message);
-      console.log(`Unable to create new user ${name, email}`);
+      res.status(400).send({
+        message: `Unable to create new user ${name, email}`,
+        error: err.message
+      })
     };
   };
 });
@@ -51,7 +53,7 @@ userRouter.post("/login", async (req, res) => {
       throw new Error("Invalid login credentials");
     }
   } catch (err) {
-    console.error(err.message);
+    res.status(400).send(err.message);
   }
 });
 
