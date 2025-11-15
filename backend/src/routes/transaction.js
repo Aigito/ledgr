@@ -1,6 +1,7 @@
 import express from "express";
 import userAuth from "../middlewares/userAuth.js";
 import Transaction from "../models/transaction.js";
+import validateEntries from "../middlewares/validateEntries.js";
 
 const transactionRouter = express.Router();
 
@@ -24,7 +25,7 @@ transactionRouter.get("/", userAuth, async (req, res) => {
   }
 });
 
-transactionRouter.post("/", userAuth, async (req, res) => {
+transactionRouter.post("/", userAuth, validateEntries, async (req, res) => {
   const user = req.user;
 
   const { description, entries } = req.body;
@@ -47,22 +48,26 @@ transactionRouter.post("/", userAuth, async (req, res) => {
   }
 });
 
-transactionRouter.patch("/", userAuth, async (req, res) => {
+transactionRouter.patch("/", userAuth, validateEntries, async (req, res) => {
   const { _id, description, entries } = req.body;
 
-  const updatedTransaction = await Transaction.findOneAndUpdate(
-    { _id },
-    {
-      description,
-      entries
-    },
-    {
-      new: true,
-      runValidators: true
-    }
-  );
+  try {
+    const updatedTransaction = await Transaction.findOneAndUpdate(
+      { _id },
+      {
+        description,
+        entries
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
 
-  res.send(updatedTransaction);
+    res.send(updatedTransaction);
+  } catch (err) {
+    res.status(400).send(err.message)
+  }
 });
 
 export default transactionRouter;
