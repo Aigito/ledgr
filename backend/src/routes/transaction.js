@@ -72,7 +72,24 @@ transactionRouter.patch("/:id", userAuth, validateEntries, async (req, res) => {
       data: updatedTransaction
     });
   } catch (err) {
-    res.status(400).send(err.message)
+    res.status(400).send(err.message);
+  }
+});
+
+transactionRouter.delete("/:id", userAuth, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedTransaction = await Transaction.findOneAndDelete({ _id: id });
+
+    if (!deletedTransaction) return res.status(404).send("Transaction does not exist!");
+
+    res.send({
+      message: "Transaction has been successfully deleted!",
+      data: deletedTransaction
+    })
+  } catch (err) {
+    res.status(400).send(err.message);
   }
 });
 
