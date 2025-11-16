@@ -5,15 +5,15 @@ import validateEntries from "../middlewares/validateEntries.js";
 
 const transactionRouter = express.Router();
 
-transactionRouter.get("/", userAuth, async (req, res) => {
-  const { _id } = req.body;
+transactionRouter.get("/:id", userAuth, async (req, res) => {
+  const { id } = req.params;
 
   try {
     let transaction;
 
-    if (_id) {
+    if (id) {
       transaction = await Transaction
-        .findById(_id)
+        .findById(id)
         .populate("entries.accountId", "accountName");
     } else {
       transaction = await Transaction.find();
@@ -48,12 +48,13 @@ transactionRouter.post("/", userAuth, validateEntries, async (req, res) => {
   }
 });
 
-transactionRouter.patch("/", userAuth, validateEntries, async (req, res) => {
-  const { _id, description, entries } = req.body;
+transactionRouter.patch("/:id", userAuth, validateEntries, async (req, res) => {
+  const { id } = req.params;
+  const { description, entries } = req.body;
 
   try {
     const updatedTransaction = await Transaction.findOneAndUpdate(
-      { _id },
+      { _id: id },
       {
         description,
         entries
