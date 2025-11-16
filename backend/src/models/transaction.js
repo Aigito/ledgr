@@ -1,7 +1,19 @@
 import mongoose from "mongoose";
 
-const minTwoAccounts = (acc) => {
-  return Array.isArray(acc) && acc.length >= 2;
+const minTwoAccounts = (entries) => {
+  return Array.isArray(entries) && entries.length >= 2;
+};
+
+const debitsEqualCredits = (entries) => {
+  const totalDebit = entries
+    .filter(e => e.type === "debit")
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
+  const totalCredit = entries
+    .filter(e => e.type === "credit")
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
+  return totalDebit === totalCredit;
 };
 
 const transactionSchema = mongoose.Schema(
@@ -36,32 +48,22 @@ const transactionSchema = mongoose.Schema(
           }
         }
       ],
-      validate: {
-        validator: minTwoAccounts,
-        message: "Must be connected to at least 2 accounts"
-      }
+      validate: [
+        {
+          validator: minTwoAccounts,
+          message: "Must be connected to at least 2 accounts"
+        },
+        {
+          validator: debitsEqualCredits,
+          message: "Total debit does not equal total credit"
+        },
+      ]
     },
   },
   {
     timestamps: true
   }
 );
-
-transactionSchema.pre('save', function (next) {
-  const totalDebit = this.entries
-    .filter(e => e.type === 'debit')
-    .reduce((sum, e) => sum + e.amount, 0);
-
-  const totalCredit = this.entries
-    .filter(e => e.type === 'credit')
-    .reduce((sum, e) => sum + e.amount, 0);
-
-  if (totalDebit !== totalCredit) {
-    return next(new Error('Total debit must equal total credit.'));
-  }
-
-  next();
-});
 
 const Transaction = mongoose.model("Trasaction", transactionSchema);
 

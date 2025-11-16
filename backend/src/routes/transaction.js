@@ -64,7 +64,10 @@ transactionRouter.patch("/", userAuth, validateEntries, async (req, res) => {
       }
     );
 
-    res.send(updatedTransaction);
+    res.send({
+      message: "Transaction has been successfully updated!",
+      data: updatedTransaction
+    });
   } catch (err) {
     res.status(400).send(err.message)
   }
