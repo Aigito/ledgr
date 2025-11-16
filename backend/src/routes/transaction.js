@@ -65,6 +65,8 @@ transactionRouter.patch("/:id", userAuth, validateEntries, async (req, res) => {
       }
     );
 
+    if (!updatedTransaction) return res.status(404).send("Transaction does not exist!");
+
     res.send({
       message: "Transaction has been successfully updated!",
       data: updatedTransaction
