@@ -4,10 +4,12 @@ import About from "./components/About";
 import ChartOfAccount from "./components/ChartOfAccount";
 import TransactionJournal from "./components/TransactionJournal";
 import Body from "./components/Body";
+import Navbar from "./components/Navbar";
 
 const AppLayout = () => {
   return (
     <div>
+      <Navbar />
       <Outlet />
     </div>
   );

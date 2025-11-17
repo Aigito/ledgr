@@ -10,6 +10,7 @@
     "build": "parcel build index.html"
   },
   "devDependencies": {
+    "daisyui": "^5.5.5",
     "parcel": "^2.16.1"
   },
   "dependencies": {
