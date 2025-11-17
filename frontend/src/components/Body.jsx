@@ -3,7 +3,7 @@ import React from 'react'
 const Body = () => {
   return (
     <div>
-      Homepage!!
+      <h1 className="text-3xl font-bold">Homepage!!!</h1>
     </div>
   )
 };
