@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #abedf5;
+}
+
+.navbar-link-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  margin-right: 50px;
+}
